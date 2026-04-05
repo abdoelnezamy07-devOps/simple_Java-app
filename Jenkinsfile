@@ -9,4 +9,13 @@ node{
             throw e
         }
     }
+    stage('test'){
+        if (env.BRANCH_NAME == feature){
+            sh 'echo "test stage"'
+        }
+        else{
+            sh 'echo "skip test stage"'
+        }
+    }
 }
+
