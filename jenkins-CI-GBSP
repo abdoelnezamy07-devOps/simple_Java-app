@@ -1,0 +1,48 @@
+pipline{
+  agent any
+  options{
+    buildDiscarder(logRotator(numToKeepStr:'10'))
+    timeout(time: 1, unit: 'HOURS')
+  }
+  stages{
+    stage('Build'){
+      steps{
+        script{
+          sh 'echo "Compiling code ......"'
+        }
+      }
+    }
+    stage('Test'){
+      when{
+          changeRequest()
+        }
+        steps{
+          script{
+            sh 'echo "Running PR Tests"'
+        }
+      }
+    }
+    stage('Deploy'){
+      when{
+        branch 'main'
+      }
+      steps{
+        script{
+          sh 'echo "Deploying to Production"'
+        }
+      }
+    }
+  }
+  post{
+    always{
+      sh 'echo "i will always run, no matter what!!"'
+    }
+    success{
+      sh 'echo "Notify team: Build success"'
+    }
+    failure{
+      sh 'echo "Notify team: Build failed"'
+    }
+  }
+}
+
