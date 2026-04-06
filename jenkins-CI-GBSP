@@ -38,18 +38,20 @@ pipeline{
       sh 'echo "i will always run, no matter what!!"'
     }
 	 success{
+		  sh 'echo "Notify team: Build success"'
       	  slackSend(
                 color: "good",
-                message: "✅ Build Success! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}",
-      sh 'echo "Notify team: Build success"'
-   	) 
+                message: "✅ Build Success! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}"
+			)
     }
     	failure{
+		 sh 'echo "Notify team: Build failed"'
       	 slackSend(
                 color: "danger",
-                message: "❌ Build Failed! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}",
-      sh 'echo "Notify team: Build failed"'
-	)
+                message: "❌ Build Failed! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}"
+			)     
+
+	
     }
   }
 }
