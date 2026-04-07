@@ -26,8 +26,8 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'Password', usernameVariable: 'Username')]) {
                         sh "echo \$Password | docker login -u \$Username --password-stdin"
-                        sh "docker push ${Username}/${APP_NAME}:${IMAGE_TAG}"
-                        sh "docker push ${Username}/${APP_NAME}:latest"
+                        sh "docker push \${Username}/${APP_NAME}:${IMAGE_TAG}"
+                        sh "docker push \${Username}/${APP_NAME}:latest"
                     }
                 }
             }
