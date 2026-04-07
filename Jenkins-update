@@ -5,6 +5,7 @@ pipeline {
         DOCKER_HUB_USER = 'abdelrhmanpasha' 
         APP_NAME        = 'java-app'
 	IMAGE_TAG       = "${env.BUILD_NUMBER}" // to be more dynamic for traceabillity and reliability
+	CLUSTER_NAME    = 'thoughtful-classical-creature'
         REGION          = 'us-east-1'
     }
 
