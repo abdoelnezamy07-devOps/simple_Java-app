@@ -1,17 +1,34 @@
 pipeline{
-    agent any
+    agent{
+        label 'ec2-agent'
+    }
     stages{
         stage('build'){
             steps{
                 script{
-                    echo 'build stage in progress'
+                    sh 'docker build -t $Username/java-app .'
                 }
             }
         }
-        stage('test'){
+        stage('Push'){
             steps{
                 script{
-                    echo 'test stage in progress'
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'Password', usernameVariable: 'Username')]) {
+                
+                        sh 'docker login --username $Username --password $Password'
+                        sh 'docker push $Username/java-app'
+                    }
+                }
+            }
+        }
+        stage('deploy'){
+            steps{
+                script{
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    
+                        sh 'aws eks create --name pipe --region us-east-1'
+                        sh 'kubectl apply -f ./k8s/deployment.yaml'
+                    }
                 }
             }
         }
