@@ -1,0 +1,57 @@
+
+pipeline {
+    agent { label 'ec2-agent' }
+    
+    environment {
+        DOCKER_HUB_USER = 'abdelrhmanpasha' 
+        APP_NAME        = 'java-app'
+        IMAGE_TAG       = "${env.BUILD_NUMBER}" # to be more dynamic for traceabillity and reliability
+        CLUSTER_NAME    = 'thoughtful-classical-creature'
+        REGION          = 'us-east-1'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG} ."
+		### its for debuging and to be easier in rollback state
+                    sh "docker tag ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${APP_NAME}:latest"
+		### its just change the last edit of image to be more easier in pull 
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'Password', usernameVariable: 'Username')]) {
+                        sh "echo \$Password | docker login -u \$Username --password-stdin"
+                        sh "docker push ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG}"
+                        sh "docker push ${DOCKER_HUB_USER}/${APP_NAME}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+			withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh "aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${REGION}"
+			sh "sed -i 's|image:.*|image: ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG}|g' ./k8s/deployment.yaml"
+			### its to change image with new one before applying file (automatically/dynamically)
+                        sh "kubectl apply -f ./k8s/deployment.yaml"
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh "docker logout"
+            cleanWs()  
+        }
+    }
+}
