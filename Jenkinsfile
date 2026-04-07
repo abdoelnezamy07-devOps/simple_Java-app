@@ -28,7 +28,7 @@ pipeline{
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     
                         sh 'aws eks update-kubeconfig --name thoughtful-classical-creature --region us-east-1'
-                        sh 'kubectl apply -f ./k8s/deployment.yaml --validate=false'
+                        sh 'kubectl apply -f ./k8s/deployment.yaml'
                     }
                 }
             }
