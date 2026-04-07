@@ -15,7 +15,7 @@ pipeline {
                 script {
                     sh "docker build -t ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG} ."
 		// its for debuging and to be easier in rollback state
-                    sh "docker tag ${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${APP_NAME}:latest"
+                    sh "docker tag \${DOCKER_HUB_USER}/${APP_NAME}:${IMAGE_TAG} \${DOCKER_HUB_USER}/${APP_NAME}:latest"
 		// its just change the last edit of image to be more easier in pull 
                 }
             }
