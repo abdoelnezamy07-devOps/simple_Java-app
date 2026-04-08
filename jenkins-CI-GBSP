@@ -41,15 +41,16 @@ pipeline{
       	  slackSend(
                 color: "good",
                 message: "✅ Build Success! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}"
-      sh 'echo "Notify team: Build success"'
-   	) 
+    	 )
+	 sh 'echo "Notify team: Build success"' 
     }
     	failure{
       	 slackSend(
                 color: "danger",
                 message: "❌ Build Failed! \n Project: ${env.JOB_NAME} \n  Build: ${env.BUILD_NUMBER} \n URL: ${env.BUILD_URL}",
-      sh 'echo "Notify team: Build failed"'
 	)
+      	sh 'echo "Notify team: Build failed"'
+
     }
   }
 }
