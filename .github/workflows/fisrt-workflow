@@ -13,4 +13,4 @@ jobs:
         uses: action/checkout@v6.0.2
 
       - name: clean maven package
-		    run: mvn clean package
+		run: mvn clean package
