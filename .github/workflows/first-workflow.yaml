@@ -8,8 +8,8 @@ jobs:
     name: first_workflow
     runs-on: ubuntu-latest
     steps:
-     - name: checkout code
-       uses: actions/checkout@v6.0.2
+      - name: checkout code
+        uses: actions/checkout@v6.0.2
 	 
-     - name: clean package
-       run: mvn clean package
+      - name: clean package
+        run: mvn clean package
