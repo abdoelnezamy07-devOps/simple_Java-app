@@ -1,0 +1,16 @@
+name: fist worlflow
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  first workflow:
+    name: first-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: action/checkout@v6.0.2
+
+      - name: clean maven package
+		    run: mvn clean package
