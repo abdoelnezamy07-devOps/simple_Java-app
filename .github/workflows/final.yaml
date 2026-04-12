@@ -24,4 +24,6 @@ jobs:
        uses: docker/build-push-action@v7.1.0
        with:
          push: true
-         tags: abdelrhmanpasha/java-app:${{ github.ref }}
+         tags: |
+           abdelrhmanpasha/java-app:${{ github.ref_name }}
+           abdelrhmanpasha/java-app:latest
