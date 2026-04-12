@@ -7,6 +7,8 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:11-jre-alpine
 WORKDIR /app
+RUN addgroup -S devopsgroup && adduser -S devopsuser -G devopsgroup
+USER devopsuser
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
