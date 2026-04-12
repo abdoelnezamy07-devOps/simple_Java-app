@@ -27,3 +27,5 @@ jobs:
          tags: |
            abdelrhmanpasha/java-app:${{ github.ref_name }}
            abdelrhmanpasha/java-app:latest
+         cache-from: type=gha
+         cache-to: type=gha,mode=max
