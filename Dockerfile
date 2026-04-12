@@ -1,8 +1,12 @@
-FROM maven:3.6.3-jdk-11-slim
-COPY src /app/src
-COPY pom.xml /app
-RUN mvn -f /app/pom.xml clean package
+FROM maven:3.6.3-jdk-11-slim AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src 
+RUN mvn clean package -DskipTests
 
-RUN mv /app/target/*.jar app.jar
-
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
